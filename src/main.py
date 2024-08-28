@@ -2,13 +2,16 @@ from fastapi import FastAPI
 from apscheduler.schedulers.background import BackgroundScheduler
 import uvicorn
 from app_config import AppConfig
+from expiry_scanner import ExpiryScanner
+from watch_manager import WatchManager
 
 app = FastAPI()
 scheduler = BackgroundScheduler()
 appconfig = AppConfig()
 
+
 # scan key vaults
-@scheduler.scheduled_job('interval', seconds=5)
+#@scheduler.scheduled_job('interval', seconds=5)
 def scheduled_job_1():
     print("scheduled_job_1")
 
@@ -16,9 +19,16 @@ def scheduled_job_1():
 async def is_ready():
     return 'ready'
 
-@app.get("/api/expired")
+@app.get("/api/items/expire")
 async def get_expired_items():
-    return {"message": "Hello, World!"}
+
+    wm = WatchManager(appconfig)
+
+    sc = wm.scan_expiring_items()
+
+    return sc
+
+    
 
 
 scheduler.start()
