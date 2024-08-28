@@ -1,10 +1,11 @@
 from fastapi import FastAPI
 from apscheduler.schedulers.background import BackgroundScheduler
 import uvicorn
+from app_config import AppConfig
 
 app = FastAPI()
-
 scheduler = BackgroundScheduler()
+appconfig = AppConfig()
 
 # scan key vaults
 @scheduler.scheduled_job('interval', seconds=5)
