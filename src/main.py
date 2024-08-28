@@ -11,9 +11,12 @@ scheduler = BackgroundScheduler()
 def scheduled_job_1():
     print("scheduled_job_1")
 
+@app.get("/api/ready", status_code=200)
+async def is_ready():
+    return 'ready'
 
-@app.get("/expired")
-async def read_root():
+@app.get("/api/expired")
+async def get_expired_items():
     return {"message": "Hello, World!"}
 
 
