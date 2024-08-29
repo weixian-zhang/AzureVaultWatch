@@ -22,10 +22,12 @@ async def is_ready():
 @app.get("/api/objects/expire")
 async def get_expired_items():
 
+    # wm = WatchManager(appconfig)
+    # sc = wm.scan_expiring_items()
+    # return sc
+
     wm = WatchManager(appconfig)
-
-    sc = wm.scan_expiring_items()
-
+    sc = wm.scan_expiring_items_and_notify()
     return sc
 
     
