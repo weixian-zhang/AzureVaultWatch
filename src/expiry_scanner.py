@@ -2,7 +2,7 @@
 from azure.identity import DefaultAzureCredential
 from azure.mgmt.subscription import SubscriptionClient
 from azure.mgmt.keyvault import KeyVaultManagementClient
-from app_config import AppConfig
+from config import AppConfig
 from model import KeyVault, ScanContext
 from vault_manager import VaultManager
 

@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from apscheduler.schedulers.background import BackgroundScheduler
 import uvicorn
-from app_config import AppConfig
+from config import AppConfig
 from expiry_scanner import ExpiryScanner
 from watch_manager import WatchManager
 
