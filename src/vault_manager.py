@@ -2,7 +2,7 @@ from azure.identity import DefaultAzureCredential
 from azure.keyvault.keys import KeyClient
 from azure.keyvault.certificates import CertificateClient, CertificatePolicy
 from azure.keyvault.secrets import SecretClient
-from app_config import AppConfig
+from config import AppConfig
 from model import ExpiringItem, ExpiringVersion
 from datetime import  datetime, timedelta
 from pytz import timezone

@@ -11,7 +11,7 @@ class TemplateRenderer:
         environment.trim_blocks = True
         self.email_template = environment.get_template("email.html")
 
-    def render_email(self, data: dict) -> str:
+    def render_html(self, data: dict) -> str:
         html = self.email_template.render(data)
         html = html.replace('\n', '') 
         f = open("C:\\Users\\weixzha\\Desktop\\a.html", "w")

@@ -15,7 +15,6 @@ class SMTPConfig:
         self.senderAddress = ''
         self.to = []
         self.cc = []
-        self.bcc = []
         
 class AppConfig:
 
@@ -48,7 +47,6 @@ class AppConfig:
         smtpc.senderAddress = sc['senderAddress']
         smtpc.to = sc['to']
         smtpc.cc = sc['cc']
-        smtpc.bcc = sc['bcc']
 
         return smtpc
 
