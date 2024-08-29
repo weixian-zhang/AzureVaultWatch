@@ -5,37 +5,41 @@
     <title>Azure Key Vault Expiring Objects</title>
 
     <style>
+
+        
         .body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
-            margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             width: 100vw;
         }
+
     
         .form-container {
             background-color: #fff;
-            padding: 20px;
+            padding: 10px;
+            margin: 5px;
             border-radius: 3px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
             width: 95%;
             height: 100%;
-            justify-content: center;
+            overflow-y: auto;
         }
     
         .section-container {
             font-family: Arial, sans-serif;
             background-color: #fff;
-            padding: 15px;
+            padding: 10px;
             border: 1px solid #00008B;
             border-radius: 8px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
             width: 95%;
             max-height: 100%;
             margin-bottom: 10px;
+            overflow-y: auto;
         }
     
         .section-title {
@@ -176,41 +180,110 @@
             </div>
 
             <br />
-            <br />
+            <!-- secrets -->
             {% if vault.expiring_secrets|length > 0 %}
+            <label class="section-sub-title">Expiring Secrets</label>
+            <table class="inner-table">
+                <thead>
+                    <th>Name</th>
+                    <th>Version</th>
+                    <th>Expires On</th>
+                    <th>Days to Expiry</th>
+                    <th>Latest Version</th>
+                </thead>
+                <tbody>
+                {% for es in vault.expiring_secrets %}
+                    <tr>
+                        <td rowspan="{{es.versions|length}}">{{ es.name }}</th>
+                    
+                    {% for version in es.versions %}
+                    
 
-                <label class="section-sub-title">Expiring Secrets</label>
-
-                <table class="inner-table">
-                    <thead>
-                        <th>Name</th>
-                        <th>Version</th>
-                        <th>Expires On</th>
-                        <th>Days to Expiry</th>
-                        <th>Latest Version</th>
-                    </thead>
-                    <tbody>
-                    {% for es in vault.expiring_secrets %}
-                        <tr>
-                            <td rowspan="{{es.versions|length}}">{{ es.name }}</th>
-                        
-                        {% for version in es.versions %}
-                        
-
-                            <td width="110px" style="border: 1px solid black;">{{ version.version }}</td>
-                            <td width="110px" style="border: 1px solid black;">{{ version.expires_on }}</td>
-                            <td width="110px" style="border: 1px solid black;">{{ version.days_to_expiry }}</td>
-                            {% if version.is_latest == true %}
-                            <td width="110px" style="border: 1px solid black;">Yes</td>
-                            {% else %}
-                            <td width="110px" style="border: 1px solid black;">No</td>
-                            {% endif %}
-                        </tr>
-                        {% endfor %}
+                        <td width="110px" style="border: 1px solid black;">{{ version.version }}</td>
+                        <td width="110px" style="border: 1px solid black;">{{ version.expires_on }}</td>
+                        <td width="110px" style="border: 1px solid black;">{{ version.days_to_expiry }}</td>
+                        {% if version.is_latest == true %}
+                        <td width="110px" style="border: 1px solid black;">Yes</td>
+                        {% else %}
+                        <td width="110px" style="border: 1px solid black;">No</td>
+                        {% endif %}
+                    </tr>
                     {% endfor %}
-                    </tbody>
-                </table>
+                {% endfor %}
+                </tbody>
+            </table>
             {% endif %}
+            
+            <!-- certs -->
+            <br />
+            {% if vault.expiring_certs|length > 0 %}
+            <label class="section-sub-title">Expiring Certificates</label>
+            <table class="inner-table">
+                <thead>
+                    <th>Name</th>
+                    <th>Version</th>
+                    <th>Expires On</th>
+                    <th>Days to Expiry</th>
+                    <th>Latest Version</th>
+                </thead>
+                <tbody>
+                {% for es in vault.expiring_certs %}
+                    <tr>
+                        <td rowspan="{{es.versions|length}}">{{ es.name }}</th>
+                    
+                    {% for version in es.versions %}
+                    
+
+                        <td width="110px" style="border: 1px solid black;">{{ version.version }}</td>
+                        <td width="110px" style="border: 1px solid black;">{{ version.expires_on }}</td>
+                        <td width="110px" style="border: 1px solid black;">{{ version.days_to_expiry }}</td>
+                        {% if version.is_latest == true %}
+                        <td width="110px" style="border: 1px solid black;">Yes</td>
+                        {% else %}
+                        <td width="110px" style="border: 1px solid black;">No</td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+
+        <!-- keys -->
+        <br />
+        {% if vault.expiring_keys|length > 0 %}
+        <label class="section-sub-title">Expiring Keys</label>
+        <table class="inner-table">
+            <thead>
+                <th>Name</th>
+                <th>Version</th>
+                <th>Expires On</th>
+                <th>Days to Expiry</th>
+                <th>Latest Version</th>
+            </thead>
+            <tbody>
+            {% for es in vault.expiring_keys %}
+                <tr>
+                    <td rowspan="{{es.versions|length}}">{{ es.name }}</th>
+                
+                {% for version in es.versions %}
+                
+
+                    <td width="110px" style="border: 1px solid black;">{{ version.version }}</td>
+                    <td width="110px" style="border: 1px solid black;">{{ version.expires_on }}</td>
+                    <td width="110px" style="border: 1px solid black;">{{ version.days_to_expiry }}</td>
+                    {% if version.is_latest == true %}
+                    <td width="110px" style="border: 1px solid black;">Yes</td>
+                    {% else %}
+                    <td width="110px" style="border: 1px solid black;">No</td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+
         </div>
         {% endfor %}
         
