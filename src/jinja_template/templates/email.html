@@ -1,0 +1,219 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Key Vault Expiring Objects</title>
+
+    <style>
+        .body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+        }
+    
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 3px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            width: 95%;
+            height: 100%;
+            justify-content: center;
+        }
+    
+        .section-container {
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+            padding: 15px;
+            border: 1px solid #00008B;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            width: 95%;
+            max-height: 100%;
+            margin-bottom: 10px;
+        }
+    
+        .section-title {
+            font-size:18px;
+            font-weight: bold;
+            color: #006FB9;
+            text-align: left;
+            margin-bottom: 15px;
+        }
+
+        .section-sub-title {
+            font-size:16px;
+            font-weight: bold;
+            color: #006FB9;
+            text-align: left;
+            margin-bottom: 15px;
+        }
+    
+        #report-title {
+            font-size:24px;
+            margin-bottom: 25px;
+            color: #1167b1;
+            text-align: center
+        }
+    
+        .col-label-left {
+            text-align: left;
+            font-weight: bold;
+            font-size: 15px;
+            color: #000000;
+        }
+    
+        .col-label-right {
+            color: #000000;
+            font-size: 15px
+        }
+    
+    
+        .status-active {
+            color: #A21515;
+            font-weight: bold;
+        }
+        .status-resolved {
+            color: #15A22D;
+            font-weight: bold;
+        }
+    
+    
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top:20px;
+            overflow-y: auto;
+            table-layout: fixed;
+            word-break:break-all;
+        }
+    
+    
+        .inner-table {
+            overflow-y: auto;
+            border: 1px solid #000;
+            border-collapse: collapse;
+            max-width:100%;
+            max-height: 350px;
+            text-align: left;
+        }
+    
+        .inner-table td,  .inner-table th {
+            border: 1px solid #000;
+            padding: 10px;
+        }
+    
+        /* tbody > tr > td:last-of-type {
+        text-align: center;
+        }
+
+        thead {
+            border-bottom: 2px solid rgb(160 160 160);
+            background-color: #2c5e77;
+            color: #fff;
+        }
+     */
+        .scrolling-table {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+    
+        #update-summary {
+            overflow-y: auto;
+            max-height: 350px;
+        }
+
+        label {
+            font-family: Arial, sans-serif;
+        }
+
+        .label-value {
+            font-weight: bold;
+            color: black;
+        }
+    
+    </style>
+</head>
+
+
+<body>
+    <div class="form-container">
+        <div class="section-title" id="report-title">
+            Azure Key Vault Expiring Objects</br>
+        </div>
+
+        <div class="section-container">
+            <div style="white-space:nowrap">
+                <label for="id1">Scan Date: </label>
+                <label for="id1" class="label-value">{{ scan_date }}</label>
+            </div>
+            <div style="white-space:nowrap">
+                <label>System will notify <span class="label-value">{{ num_of_days_notify_before_expiry }} days </span> before an object expiry,
+                    which date of notification is <span class="label-value">{{ date_to_notify }}</span>
+                </label>
+            </div>
+        </div>
+        
+        {% for vault in vaults %}
+        <div class="section-container">
+
+            <div style="white-space:nowrap">
+                <label for="id1">Key Vault Name: </label>
+                <label for="id1" class="label-value">{{ vault.name }}</label>
+            </div>
+            <div style="white-space:nowrap">
+                <label for="id1">Subscription ID: </label>
+                <label for="id1" class="label-value">{{ vault.subscription_id }}</label>
+            </div>
+            <div style="white-space:nowrap">
+                <label for="id1">Resource Group: </label>
+                <label for="id1" class="label-value">{{ vault.resource_group }}</label>
+            </div>
+
+            <br />
+            <br />
+            {% if vault.expiring_secrets|length > 0 %}
+
+                <label class="section-sub-title">Expiring Secrets</label>
+
+                <table class="inner-table">
+                    <thead>
+                        <th>Name</th>
+                        <th>Version</th>
+                        <th>Expires On</th>
+                        <th>Days to Expiry</th>
+                        <th>Latest Version</th>
+                    </thead>
+                    <tbody>
+                    {% for es in vault.expiring_secrets %}
+                        <tr>
+                            <td rowspan="{{es.versions|length}}">{{ es.name }}</th>
+                        
+                        {% for version in es.versions %}
+                        
+
+                            <td width="110px" style="border: 1px solid black;">{{ version.version }}</td>
+                            <td width="110px" style="border: 1px solid black;">{{ version.expires_on }}</td>
+                            <td width="110px" style="border: 1px solid black;">{{ version.days_to_expiry }}</td>
+                            {% if version.is_latest == true %}
+                            <td width="110px" style="border: 1px solid black;">Yes</td>
+                            {% else %}
+                            <td width="110px" style="border: 1px solid black;">No</td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+        {% endfor %}
+        
+    </div>
+</body>
+</html>

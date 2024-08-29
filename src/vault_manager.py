@@ -23,7 +23,8 @@ class VaultManager:
 
         for secret in self.secret_client.list_properties_of_secrets():
 
-            if not secret.enabled:
+            # ignore disabled and secret that is private key belonging to Certificate
+            if not secret.enabled or secret.content_type == 'application/x-pkcs12':
                 continue
 
             ei = ExpiringItem(secret.id, secret.name)
@@ -34,11 +35,13 @@ class VaultManager:
                     continue
 
                 if self.is_expiring(version.expires_on):
-                    ev = ExpiringVersion(version.version, version.expires_on)
+                    ev = ExpiringVersion(version.version, version.expires_on, version.created_on)
                     ei.versions.append(ev)
 
             if ei.versions:
+                ei.set_latest_version()
                 expiring_items.append(ei)
+
         
         return expiring_items
     
@@ -60,10 +63,11 @@ class VaultManager:
                     continue
 
                 if self.is_expiring(version.expires_on):
-                    ev = ExpiringVersion(version.version, version.expires_on)
+                    ev = ExpiringVersion(version.version, version.expires_on, version.created_on)
                     ei.versions.append(ev)
 
             if ei.versions:
+                ei.set_latest_version()
                 expiring_items.append(ei)
         
         return expiring_items
@@ -86,10 +90,11 @@ class VaultManager:
                     continue
 
                 if self.is_expiring(version.expires_on):    
-                    ev = ExpiringVersion(version.version, version.expires_on)
+                    ev = ExpiringVersion(version.version, version.expires_on, version.created_on)
                     ei.versions.append(ev)
 
             if ei.versions:
+                ei.set_latest_version()
                 expiring_items.append(ei)
         
         return expiring_items
