@@ -19,7 +19,7 @@ def scheduled_job_1():
 async def is_ready():
     return 'ready'
 
-@app.get("/api/items/expire")
+@app.get("/api/objects/expire")
 async def get_expired_items():
 
     wm = WatchManager(appconfig)
