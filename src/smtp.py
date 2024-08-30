@@ -1,7 +1,8 @@
 import smtplib
-from email.message import EmailMessage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from email.generator import Generator
+from io import StringIO
 from config import AppConfig
 
 class SMTPSender:
@@ -19,20 +20,22 @@ class SMTPSender:
         # Secure the SMTP connection
         smtpObj.starttls()
 
-        # Login to the server (if required)
         smtpObj.login(self.appconfig.smtp_config.username, self.appconfig.smtp_config.password)
 
-        html_mime = MIMEText(content, 'html')
+        html_mime = MIMEText(content, 'html', 'UTF-8')
 
         msg = MIMEMultipart('alternative') #EmailMessage()
         msg.attach(html_mime)
         msg['Subject'] = self.appconfig.smtp_config.subject
         msg['From'] = self.appconfig.smtp_config.senderAddress
-        msg['To'] = self.appconfig.smtp_config.to
-        msg['Cc'] = self.appconfig.smtp_config.cc
+        msg['To'] = ', '.join(self.appconfig.smtp_config.to)
+        msg['Cc'] = ', '.join(self.appconfig.smtp_config.cc)
+
+        # Create a generator and flatten message object to 'file’
+        str_io = StringIO()
+        g = Generator(str_io, False)
+        g.flatten(msg)
 
         smtpObj.sendmail( self.appconfig.smtp_config.senderAddress, self.appconfig.smtp_config.to, msg.as_string())
-        #smtpObj.send_message(msg)
 
-        # Quit the SMTP session
         smtpObj.quit()

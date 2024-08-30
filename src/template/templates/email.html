@@ -51,7 +51,7 @@
         }
 
         .section-sub-title {
-            font-size:16px;
+            font-size:14px;
             font-weight: bold;
             color: #006FB9;
             text-align: left;
@@ -112,16 +112,7 @@
             padding: 10px;
         }
     
-        /* tbody > tr > td:last-of-type {
-        text-align: center;
-        }
 
-        thead {
-            border-bottom: 2px solid rgb(160 160 160);
-            background-color: #2c5e77;
-            color: #fff;
-        }
-     */
         .scrolling-table {
             max-height: 600px;
             overflow-y: auto;
@@ -137,6 +128,7 @@
         }
 
         .label-value {
+            font-size: medium;
             font-weight: bold;
             color: black;
         }
@@ -157,8 +149,7 @@
                 <label for="id1" class="label-value">{{ scan_date }}</label>
             </div>
             <div style="white-space:nowrap">
-                <label>System will notify <span class="label-value">{{ num_of_days_notify_before_expiry }} days </span> before an object expiry,
-                    which date of notification is <span class="label-value">{{ date_to_notify }}</span>
+                <label>System will notify <span class="label-value">{{ num_of_days_notify_before_expiry }} days</span> on <span class="label-value">{{ date_to_notify }}</span> before an object expires
                 </label>
             </div>
         </div>
@@ -190,6 +181,7 @@
                     <th>Expires On</th>
                     <th>Days to Expiry</th>
                     <th>Latest Version</th>
+                    <th>Created On</th>
                 </thead>
                 <tbody>
                 {% for es in vault.expiring_secrets %}
@@ -207,6 +199,7 @@
                         {% else %}
                         <td width="110px" style="border: 1px solid black;">No</td>
                         {% endif %}
+                        <td width="110px" style="border: 1px solid black;">{{ version.version_created_on }}</td>
                     </tr>
                     {% endfor %}
                 {% endfor %}
@@ -225,6 +218,7 @@
                     <th>Expires On</th>
                     <th>Days to Expiry</th>
                     <th>Latest Version</th>
+                    <th>Created On</th>
                 </thead>
                 <tbody>
                 {% for es in vault.expiring_certs %}
@@ -242,6 +236,7 @@
                         {% else %}
                         <td width="110px" style="border: 1px solid black;">No</td>
                         {% endif %}
+                        <td width="110px" style="border: 1px solid black;">{{ version.version_created_on }}</td>
                     </tr>
                     {% endfor %}
                 {% endfor %}
@@ -260,6 +255,7 @@
                 <th>Expires On</th>
                 <th>Days to Expiry</th>
                 <th>Latest Version</th>
+                <th>Created On</th>
             </thead>
             <tbody>
             {% for es in vault.expiring_keys %}
@@ -277,6 +273,7 @@
                     {% else %}
                     <td width="110px" style="border: 1px solid black;">No</td>
                     {% endif %}
+                    <td width="110px" style="border: 1px solid black;">{{ version.version_created_on }}</td>
                 </tr>
                 {% endfor %}
             {% endfor %}
