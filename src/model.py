@@ -1,6 +1,11 @@
 from datetime import datetime, timedelta
 from util import Util
 
+
+class NotifiedExpiringVersion:
+    def __init__(self, version_id: str, last_notified_on: datetime) -> None:
+        self.version_id = version_id
+        self.last_notified_on = last_notified_on
 class ExpiringVersion:
     
     def __init__(self, id: str, version: str, expires_on: datetime, created_on: datetime) -> None:
