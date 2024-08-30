@@ -99,6 +99,7 @@
     
     
         .inner-table {
+            font-size: small;
             overflow-y: auto;
             border: 1px solid #000;
             border-collapse: collapse;
@@ -199,7 +200,7 @@
                         {% else %}
                         <td width="110px" style="border: 1px solid black;">No</td>
                         {% endif %}
-                        <td width="110px" style="border: 1px solid black;">{{ version.version_created_on }}</td>
+                        <td width="110px" style="border: 1px solid black;">{{ version.created_on_display }}</td>
                     </tr>
                     {% endfor %}
                 {% endfor %}
@@ -226,8 +227,6 @@
                         <td rowspan="{{es.versions|length}}">{{ es.name }}</th>
                     
                     {% for version in es.versions %}
-                    
-
                         <td width="110px" style="border: 1px solid black;">{{ version.version }}</td>
                         <td width="110px" style="border: 1px solid black;">{{ version.expires_on }}</td>
                         <td width="110px" style="border: 1px solid black;">{{ version.days_to_expiry }}</td>
@@ -236,7 +235,7 @@
                         {% else %}
                         <td width="110px" style="border: 1px solid black;">No</td>
                         {% endif %}
-                        <td width="110px" style="border: 1px solid black;">{{ version.version_created_on }}</td>
+                        <td width="110px" style="border: 1px solid black;">{{ version.created_on_display }}</td>
                     </tr>
                     {% endfor %}
                 {% endfor %}
@@ -254,6 +253,7 @@
                 <th>Version</th>
                 <th>Expires On</th>
                 <th>Days to Expiry</th>
+                <th>Last Rotation Days</th>
                 <th>Latest Version</th>
                 <th>Created On</th>
             </thead>
@@ -263,17 +263,16 @@
                     <td rowspan="{{es.versions|length}}">{{ es.name }}</th>
                 
                 {% for version in es.versions %}
-                
-
                     <td width="110px" style="border: 1px solid black;">{{ version.version }}</td>
                     <td width="110px" style="border: 1px solid black;">{{ version.expires_on }}</td>
                     <td width="110px" style="border: 1px solid black;">{{ version.days_to_expiry }}</td>
+                    <td width="110px" style="border: 1px solid black;">{{ version.key_last_rotation_days }}</td>
                     {% if version.is_latest == true %}
                     <td width="110px" style="border: 1px solid black;">Yes</td>
                     {% else %}
                     <td width="110px" style="border: 1px solid black;">No</td>
                     {% endif %}
-                    <td width="110px" style="border: 1px solid black;">{{ version.version_created_on }}</td>
+                    <td width="110px" style="border: 1px solid black;">{{ version.created_on_display }}</td>
                 </tr>
                 {% endfor %}
             {% endfor %}

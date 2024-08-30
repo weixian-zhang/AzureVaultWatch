@@ -16,6 +16,14 @@ class WatchManager:
         html = self.tpl_renderer.render_html(sc.__dict__)
         self.smtp_sender.send(html)
 
+
     def scan_expiring_items(self) -> ScanContext:
         sc = self.expiry_scanner.scan()
         return sc
+
+        # # for testing only
+        # sc = self.expiry_scanner.scan()
+        # html = self.tpl_renderer.render_html(sc.__dict__)
+        # with open('C:\\Users\\weixzha\\Desktop\\a.html', 'w') as f:
+        #     f.write(html)
+        # return sc
