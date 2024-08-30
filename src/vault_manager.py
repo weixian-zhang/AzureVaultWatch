@@ -73,13 +73,13 @@ class VaultManager:
         return expiring_items
     
     
-    def list_expiring_keys(self):
+    def list_expiring_keys(self, cert_names: set):
         
         expiring_items = []
 
         for key in self.key_client.list_properties_of_keys():
 
-            if not key.enabled:
+            if not key.enabled or key.name in cert_names:
                 continue
 
             ei = ExpiringObject(key.id, key.name, 'key')

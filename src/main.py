@@ -10,7 +10,7 @@ scheduler = BackgroundScheduler()
 appconfig = AppConfig()
 
 
-#@scheduler.scheduled_job('interval', seconds=900)
+@scheduler.scheduled_job('interval', seconds=900)
 def background_scan_and_notify():
     wm = WatchManager(appconfig)
     sc = wm.scan_expiring_items_and_notify()
