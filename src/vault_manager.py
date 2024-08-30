@@ -27,7 +27,7 @@ class VaultManager:
             if not secret.enabled or secret.content_type == 'application/x-pkcs12':
                 continue
 
-            ei = ExpiringObject(secret.id, secret.name, 'secret')
+            ei = ExpiringObject(secret.name, 'secret')
 
             for version in self.secret_client.list_properties_of_secret_versions(secret.name):
 
@@ -55,7 +55,7 @@ class VaultManager:
             if not cert.enabled:
                 continue
 
-            ei = ExpiringObject(cert.id, cert.name, 'cert')
+            ei = ExpiringObject(cert.name, 'cert')
 
             for version in self.cert_client.list_properties_of_certificate_versions(cert.name):
 
@@ -82,7 +82,7 @@ class VaultManager:
             if not key.enabled or key.name in cert_names:
                 continue
 
-            ei = ExpiringObject(key.id, key.name, 'key')
+            ei = ExpiringObject(key.name, 'key')
 
             for version in self.key_client.list_properties_of_key_versions(key.name):
 
