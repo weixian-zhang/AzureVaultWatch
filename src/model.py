@@ -15,8 +15,7 @@ class ExpiringVersion:
 
 # type is either key, secret, cert
 class ExpiringObject:
-    def __init__(self, id, name, type) -> None:
-        self.id = id
+    def __init__(self, name, type) -> None:
         self.name = name
         self.type = type
         self.versions = []
