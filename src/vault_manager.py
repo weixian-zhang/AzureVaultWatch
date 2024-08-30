@@ -3,7 +3,7 @@ from azure.keyvault.keys import KeyClient
 from azure.keyvault.certificates import CertificateClient, CertificatePolicy
 from azure.keyvault.secrets import SecretClient
 from config import AppConfig
-from model import ExpiringItem, ExpiringVersion
+from model import ExpiringObject, ExpiringVersion
 from datetime import  datetime, timedelta
 from pytz import timezone
 
@@ -27,7 +27,7 @@ class VaultManager:
             if not secret.enabled or secret.content_type == 'application/x-pkcs12':
                 continue
 
-            ei = ExpiringItem(secret.id, secret.name)
+            ei = ExpiringObject(secret.id, secret.name, 'secret')
 
             for version in self.secret_client.list_properties_of_secret_versions(secret.name):
 
@@ -35,7 +35,7 @@ class VaultManager:
                     continue
 
                 if self.is_expiring(version.expires_on):
-                    ev = ExpiringVersion(version.version, version.expires_on, version.created_on)
+                    ev = ExpiringVersion(version.id, version.version, version.expires_on, version.created_on)
                     ei.versions.append(ev)
 
             if ei.versions:
@@ -55,7 +55,7 @@ class VaultManager:
             if not cert.enabled:
                 continue
 
-            ei = ExpiringItem(cert.id, cert.name)
+            ei = ExpiringObject(cert.id, cert.name, 'cert')
 
             for version in self.cert_client.list_properties_of_certificate_versions(cert.name):
 
@@ -63,7 +63,7 @@ class VaultManager:
                     continue
 
                 if self.is_expiring(version.expires_on):
-                    ev = ExpiringVersion(version.version, version.expires_on, version.created_on)
+                    ev = ExpiringVersion(version.id, version.version, version.expires_on, version.created_on)
                     ei.versions.append(ev)
 
             if ei.versions:
@@ -82,7 +82,7 @@ class VaultManager:
             if not key.enabled:
                 continue
 
-            ei = ExpiringItem(key.id, key.name)
+            ei = ExpiringObject(key.id, key.name, 'key')
 
             for version in self.key_client.list_properties_of_key_versions(key.name):
 
@@ -90,7 +90,7 @@ class VaultManager:
                     continue
 
                 if self.is_expiring(version.expires_on):    
-                    ev = ExpiringVersion(version.version, version.expires_on, version.created_on)
+                    ev = ExpiringVersion(version.id, version.version, version.expires_on, version.created_on)
                     ei.versions.append(ev)
 
             if ei.versions:
