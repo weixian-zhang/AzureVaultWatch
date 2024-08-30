@@ -11,14 +11,11 @@ class WatchManager:
         self.tpl_renderer = TemplateRenderer()
         self.smtp_sender = SMTPSender(appconfig)
 
-
     def scan_expiring_items_and_notify(self):
         sc = self.expiry_scanner.scan()
         html = self.tpl_renderer.render_html(sc.__dict__)
         self.smtp_sender.send(html)
 
-
-    
     def scan_expiring_items(self) -> ScanContext:
         sc = self.expiry_scanner.scan()
         return sc

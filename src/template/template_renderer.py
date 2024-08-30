@@ -13,10 +13,12 @@ class TemplateRenderer:
 
     def render_html(self, data: dict) -> str:
         html = self.email_template.render(data)
-        html = html.replace('\n', '') 
-        f = open("C:\\Users\\weixzha\\Desktop\\a.html", "w")
-        f.write(html)
-        f.close()
-
+        html = html.replace('\n', '')
         return html
+    
+        # f = open("C:\\Users\\weixzha\\Desktop\\a.html", "w")
+        # f.write(html)
+        # f.close()
+
+        
 

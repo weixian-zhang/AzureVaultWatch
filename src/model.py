@@ -5,9 +5,9 @@ class ExpiringVersion:
     
     def __init__(self, version: str, expires_on: datetime, created_on: datetime) -> None:
         self.version = version
-        self.expires_on = Util.as_date_str(expires_on)
+        self.expires_on = Util.as_friendly_date_str(expires_on)
         self.days_to_expiry = Util.days_to_expiry(expires_on)
-        self.version_created_on = created_on
+        self.version_created_on = Util.as_friendly_date_str(created_on)
         self.is_latest = False
 
 class ExpiringItem:
@@ -43,5 +43,5 @@ class ScanContext:
     def __init__(self, num_of_days_notify_before_expiry: int) -> None:
         self.scan_date = Util.now_str()
         self.num_of_days_notify_before_expiry = num_of_days_notify_before_expiry
-        self.date_to_notify = Util.as_date_str(datetime.now() - timedelta(self.num_of_days_notify_before_expiry))
+        self.date_to_notify = Util.as_friendly_date_str(datetime.now() - timedelta(self.num_of_days_notify_before_expiry))
         self.vaults = []
