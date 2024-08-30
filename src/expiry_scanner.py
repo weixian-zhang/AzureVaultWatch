@@ -23,7 +23,9 @@ class ExpiryScanner:
         for vault in vaults:
             vm = VaultManager(vault.url, self.appconfig)
             vault.expiring_certs = vm.list_expiring_certs()
-            vault.expiring_keys = vm.list_expiring_keys()
+
+            # pass in cert names to ignore keys created by certificates
+            vault.expiring_keys = vm.list_expiring_keys({c.name for c in vault.expiring_certs})
             vault.expiring_secrets = vm.list_expiring_secrets()
 
             if vault.expiring_certs or vault.expiring_keys or vault.expiring_secrets:
@@ -60,7 +62,6 @@ class ExpiryScanner:
             subids.append(s.subscription_id)
         
         return subids
-
 
 
 

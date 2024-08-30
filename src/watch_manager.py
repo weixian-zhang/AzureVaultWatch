@@ -27,3 +27,5 @@ class WatchManager:
         # with open('C:\\Users\\weixzha\\Desktop\\a.html', 'w') as f:
         #     f.write(html)
         # return sc
+
+                
