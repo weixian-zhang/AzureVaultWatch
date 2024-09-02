@@ -20,12 +20,12 @@ class AppConfig:
 
     def __init__(self) -> None:
         nod_before_exp = int(os.environ.get('NUM_OF_DAYS_NOTIFY_BEFORE_EXPIRY'))
-        nod_resend_email  = int(os.environ.get('NUM_OF_DAYS_BEFORE_RESEND_EMAIL_AGAIN_FOR_EXPIRING_ITEMS'))
+        nod_renotify  = int(os.environ.get('NUM_OF_DAYS_TO_RENOTIFY_EXPIRING_ITEMS'))
 
         self.storage_account_name = os.environ.get('STORAGE_ACCOUNT_NAME')
         self.storage_table_name = os.environ.get('STORAGE_TABLE_NAME')
-        self.num_of_days_notify_before_expiry = nod_before_exp if nod_before_exp else 60
-        self.num_of_days_before_resend_email_for_expiring_items = nod_resend_email if nod_resend_email else 3
+        self.num_of_days_notify_before_expiry = nod_before_exp
+        self.num_of_days_to_renotify_expiring_objects = nod_renotify
         self.smtp_config = self.get_smtp_config()
         
 
