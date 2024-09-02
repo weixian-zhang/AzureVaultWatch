@@ -2,12 +2,14 @@
 from azure.data.tables import TableServiceClient, UpdateMode
 from azure.identity import DefaultAzureCredential
 from config import AppConfig
-from model import ExpiringVersion
-from util import Util
+from model import ExpiringObject, TrackedExpiringObject
+from util import DateUtil
+import json
+from datetime import datetime
 
 # Table Data Gateway architectural pattern
 # singleton class
-class VersionTableGateway:
+class VaultObjectTableGateway:
 
     _instance = None
 
@@ -32,36 +34,60 @@ class VersionTableGateway:
 
         if self._initialized:
             return
-        
-
-    def is_version_exists(self, version_id):
-
-        version = self.tc.get_entity(version_id)
-        
-        if not version:
-            return False, None
-        
-        return True, version
     
 
-    def _add_version(self, v: ExpiringVersion):
-        entity = {
-            u'PartitionKey': v.id,
-            u'RowKey': '',
-            u'LastNotifiedOn': Util.now(),
-        }
+    def is_object_exists(self, vault_name, obj_name) -> tuple[bool, TrackedExpiringObject]:
 
-        self.tc.create_entity(entity)
+        try:
 
+            existing_entity = self.tc.get_entity(partition_key=vault_name, row_key=obj_name)
+   
+            if not existing_entity:
+                return False, None
+            
+            existing_entity['Versions'] = json.loads(existing_entity['Versions'])
+            
+            teObj = TrackedExpiringObject(obj_name)
 
-    def update_last_notfied_on(self, v: ExpiringVersion):
+            for k, v in existing_entity['Versions'].items():
+                teObj.versions[k] = datetime.fromtimestamp(v)
+            
+            return True, teObj
         
+        except Exception as e:
+            if hasattr(e, 'reason') and e.reason == 'Not Found':
+                return False, None
+            else:
+                raise
+
+
+
+    def insert_new_vault_object(self, vault_name, eo: ExpiringObject):
+
+        version_last_notified_date = {}
+
+        for v in eo.versions:
+            version_last_notified_date[v.version] = DateUtil.now().timestamp()
+            
         entity = {
-            u'PartitionKey': v.id,
-            u'RowKey': '',
-            u'LastNotifiedOn': Util.now(),
+            u'PartitionKey': vault_name,
+            u'RowKey': eo.name,
+            u'Versions': json.dumps(version_last_notified_date)
         }
 
+        self.tc.upsert_entity(entity, mode=UpdateMode.REPLACE)
+
+    
+    def update_existing_vault_object(self, vault_name, teo: TrackedExpiringObject):
+
+        for k, v in teo.versions.items():
+            teo.versions[k] = teo.versions[k].timestamp()
+
+        entity = {
+            u'PartitionKey': vault_name,
+            u'RowKey': teo.name,
+            u'Versions': json.dumps(teo.versions)
+        }
 
         self.tc.upsert_entity(entity, mode=UpdateMode.REPLACE)
 

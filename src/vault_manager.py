@@ -4,7 +4,7 @@ from azure.keyvault.certificates import CertificateClient, CertificatePolicy
 from azure.keyvault.secrets import SecretClient
 from config import AppConfig
 from model import ExpiringObject, ExpiringVersion
-from datetime import  datetime, timedelta
+from util import LogicUtil
 from pytz import timezone
 
 class VaultManager:
@@ -34,8 +34,8 @@ class VaultManager:
                 if not version.enabled:
                     continue
 
-                if self.is_expiring(version.expires_on):
-                    ev = ExpiringVersion(version.id, version.version, version.expires_on, version.created_on)
+                if LogicUtil.is_expiring(version.expires_on, self.appconfig.num_of_days_notify_before_expiry):
+                    ev = ExpiringVersion(version.version, version.expires_on, version.created_on)
                     ei.versions.append(ev)
 
             if ei.versions:
@@ -62,8 +62,8 @@ class VaultManager:
                 if not version.enabled:
                     continue
 
-                if self.is_expiring(version.expires_on):
-                    ev = ExpiringVersion(version.id, version.version, version.expires_on, version.created_on)
+                if LogicUtil.is_expiring(version.expires_on, self.appconfig.num_of_days_notify_before_expiry):
+                    ev = ExpiringVersion(version.version, version.expires_on, version.created_on)
                     ei.versions.append(ev)
 
             if ei.versions:
@@ -89,8 +89,8 @@ class VaultManager:
                 if not version.enabled:
                     continue
 
-                if self.is_expiring(version.expires_on):    
-                    ev = ExpiringVersion(version.id, version.version, version.expires_on, version.created_on)
+                if LogicUtil.is_expiring(version.expires_on, self.appconfig.num_of_days_notify_before_expiry):    
+                    ev = ExpiringVersion(version.version, version.expires_on, version.created_on)
                     ei.versions.append(ev)
 
             if ei.versions:
@@ -100,14 +100,4 @@ class VaultManager:
         return expiring_items
     
 
-    def is_expiring(self, expires_on: datetime) -> bool:
-        
-        if not expires_on: # Secret may not have expiry date set
-            return False
-
-        expiring_on = expires_on - timedelta(days= self.appconfig.num_of_days_notify_before_expiry)
-
-        if datetime.today().astimezone(timezone('Asia/Kuala_lumpur')) >= expiring_on.astimezone(timezone('Asia/Kuala_lumpur')):
-                return True
-        
-        return False
+    

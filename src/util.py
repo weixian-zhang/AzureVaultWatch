@@ -1,22 +1,51 @@
 
 from pytz import timezone
-from datetime import datetime
+from datetime import datetime, timedelta
 
-class Util:
+class LogicUtil:
+    """
+    contains utilities function that performs functional requirements
+    """
+    @staticmethod
+    def version_last_notify_date_over_config_num_of_days(version_last_send_date: datetime, num_of_days_to_renotify_expiring_objects: int):
+        last_send_with_nod = (DateUtil.as_utc8(version_last_send_date) + 
+                              timedelta(days=num_of_days_to_renotify_expiring_objects))
+        
+        if last_send_with_nod <= DateUtil.now():
+            return True
+        
+        return False
+    
+    @staticmethod
+    def is_expiring(expires_on: datetime, num_of_days_notify_before_expiry: int) -> bool:
+        
+        if not expires_on: # Secret may not have expiry date set
+            return False
+
+        expiring_on = expires_on - timedelta(days= num_of_days_notify_before_expiry)
+
+        if DateUtil.now() >= expiring_on.astimezone(timezone('Asia/Kuala_lumpur')):
+                return True
+        
+        return False
+    
+
+class DateUtil:
 
     @staticmethod
     def now():
         """
         Get current datetime with UTC+8 timezone
         """
-        return datetime.now().astimezone(timezone('Asia/Kuala_Lumpur'))
+        return DateUtil.as_utc8(datetime.now()) #.astimezone(timezone('Asia/Kuala_Lumpur'))
     
     @staticmethod
     def now_str():
-        return datetime.now().astimezone(timezone('Asia/Kuala_Lumpur')).ctime()
+        return DateUtil.as_utc8(datetime.now()) #.astimezone(timezone('Asia/Kuala_Lumpur')).ctime()
+        
     
     @staticmethod
-    def as_sing_kl_timezone(d: datetime):
+    def as_utc8(d: datetime):
         return d.astimezone(timezone('Asia/Kuala_Lumpur'))
     
     @staticmethod

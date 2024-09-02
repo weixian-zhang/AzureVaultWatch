@@ -25,8 +25,8 @@ class ExpiryScanner:
             vault.expiring_certs = vm.list_expiring_certs()
 
             # pass in cert names to ignore keys created by certificates
-            vault.expiring_keys = vm.list_expiring_keys({c.name for c in vault.expiring_certs})
-            vault.expiring_secrets = vm.list_expiring_secrets()
+            #vault.expiring_keys = vm.list_expiring_keys({c.name for c in vault.expiring_certs})
+            #vault.expiring_secrets = vm.list_expiring_secrets()
 
             if vault.expiring_certs or vault.expiring_keys or vault.expiring_secrets:
                 scan_context.vaults.append(vault)
