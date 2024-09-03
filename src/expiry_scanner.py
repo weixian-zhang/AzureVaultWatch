@@ -35,21 +35,21 @@ class ExpiryScanner:
         # testing only
         # import os, json, datetime
         # with open('C:\\Users\\weixzha\\Desktop\\sc.json', 'w') as f:
-        #     scan_context.scan_date = scan_context.scan_date.strftime("%Y-%m-%d %H:%M:%S") 
+        #     scan_context.scan_date = scan_context.scan_date.timestamp()
         #     for vault in scan_context.vaults:
         #         for x in vault.expiring_certs:
         #             for version in x.versions:
-        #                 version.created_on = version.created_on.strftime("%Y-%m-%d %H:%M:%S") 
-        #                 version.expires_on = version.expires_on.strftime("%Y-%m-%d %H:%M:%S")
+        #                 version.created_on = version.created_on.timestamp()
+        #                 version.expires_on = version.expires_on.timestamp()
         #         for x in vault.expiring_keys:
         #             for version in x.versions:
-        #                 version.created_on = version.created_on.strftime("%Y-%m-%d %H:%M:%S") 
-        #                 version.expires_on = version.expires_on.strftime("%Y-%m-%d %H:%M:%S")
+        #                 version.created_on = version.created_on.timestamp()
+        #                 version.expires_on = version.expires_on.timestamp()
         #         for x in vault.expiring_secrets:
         #             for version in x.versions:
-        #                 version.created_on = version.created_on.strftime("%Y-%m-%d %H:%M:%S") 
-        #                 version.expires_on = version.expires_on.strftime("%Y-%m-%d %H:%M:%S") 
-        #     sc_json = json.dumps(scan_context.__dict__) 
+        #                 version.created_on = version.created_on.timestamp()
+        #                 version.expires_on = version.expires_on.timestamp()
+        #     sc_json = json.dumps(scan_context, indent=4, default=lambda o: o.__dict__)
         #     f.write(sc_json)
 
 
