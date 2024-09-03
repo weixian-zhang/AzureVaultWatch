@@ -7,15 +7,17 @@ from util import DateUtil
 #         self.last_notified_on = last_notified_on
 
 class TrackedExpiringObject:
-    def __init__(self, name: str) -> None:
+    def __init__(self, type: str, name: str) -> None:
         self.name = name
+        self.type = type
         self.versions = {}  # key, value pair of version name and last notified date
 
 class ExpiringVersion:
     
     def __init__(self, version: str, expires_on: datetime, created_on: datetime) -> None:
         self.version = version
-        self.expires_on = DateUtil.as_friendly_date_str(expires_on)
+        self.expires_on = expires_on
+        self.expires_on_display = DateUtil.as_friendly_date_str(expires_on)
         self.days_to_expiry = DateUtil.days_to_expiry(expires_on)
         self.created_on = created_on
         self.created_on_display = DateUtil.as_friendly_date_str(created_on)
@@ -27,7 +29,7 @@ class ExpiringObject:
     def __init__(self, name, type) -> None:
         self.name = name
         self.type = type
-        self.versions = []
+        self.versions: list[ExpiringVersion] = []
 
     def set_latest_version(self):
         if not self.versions:

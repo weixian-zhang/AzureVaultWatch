@@ -193,7 +193,7 @@
                     
 
                         <td width="110px" style="border: 1px solid black;">{{ version.version }}</td>
-                        <td width="110px" style="border: 1px solid black;">{{ version.expires_on }}</td>
+                        <td width="110px" style="border: 1px solid black;">{{ version.expires_on_display }}</td>
                         <td width="110px" style="border: 1px solid black;">{{ version.days_to_expiry }}</td>
                         {% if version.is_latest == true %}
                         <td width="110px" style="border: 1px solid black;">Yes</td>
@@ -228,7 +228,7 @@
                     
                     {% for version in es.versions %}
                         <td width="110px" style="border: 1px solid black;">{{ version.version }}</td>
-                        <td width="110px" style="border: 1px solid black;">{{ version.expires_on }}</td>
+                        <td width="110px" style="border: 1px solid black;">{{ version.expires_on_display }}</td>
                         <td width="110px" style="border: 1px solid black;">{{ version.days_to_expiry }}</td>
                         {% if version.is_latest == true %}
                         <td width="110px" style="border: 1px solid black;">Yes</td>
@@ -264,7 +264,7 @@
                 
                 {% for version in es.versions %}
                     <td width="110px" style="border: 1px solid black;">{{ version.version }}</td>
-                    <td width="110px" style="border: 1px solid black;">{{ version.expires_on }}</td>
+                    <td width="110px" style="border: 1px solid black;">{{ version.expires_on_display }}</td>
                     <td width="110px" style="border: 1px solid black;">{{ version.days_to_expiry }}</td>
                     <td width="110px" style="border: 1px solid black;">{{ version.key_last_rotation_days }}</td>
                     {% if version.is_latest == true %}

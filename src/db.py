@@ -3,7 +3,7 @@ from azure.data.tables import TableServiceClient, UpdateMode
 from azure.identity import DefaultAzureCredential
 from config import AppConfig
 from model import ExpiringObject, TrackedExpiringObject
-from util import DateUtil
+from util import DateUtil, LogicUtil
 import json
 from datetime import datetime
 
@@ -36,20 +36,24 @@ class VaultObjectTableGateway:
             return
     
 
-    def is_object_exists(self, vault_name, obj_name) -> tuple[bool, TrackedExpiringObject]:
+    def is_object_exists(self, vault_name, obj_type, obj_name) -> tuple[bool, TrackedExpiringObject]:
 
         try:
+            rowKey = LogicUtil.create_db_row_key(obj_type, obj_name)
 
-            existing_entity = self.tc.get_entity(partition_key=vault_name, row_key=obj_name)
+            existing_entity = self.tc.get_entity(partition_key=vault_name, row_key=rowKey)
    
             if not existing_entity:
                 return False, None
             
-            existing_entity['Versions'] = json.loads(existing_entity['Versions'])
+            name = existing_entity['Name']
+            type = existing_entity['Type']
+            versions = json.loads(existing_entity['Versions'])
             
-            teObj = TrackedExpiringObject(obj_name)
+            teObj = TrackedExpiringObject(type, name)
 
-            for k, v in existing_entity['Versions'].items():
+            # converts from epoch timestamp
+            for k, v in versions.items():
                 teObj.versions[k] = datetime.fromtimestamp(v)
             
             return True, teObj
@@ -68,10 +72,13 @@ class VaultObjectTableGateway:
 
         for v in eo.versions:
             version_last_notified_date[v.version] = DateUtil.now().timestamp()
-            
+        
+        row_key = LogicUtil.create_db_row_key(eo.type, eo.name)
         entity = {
             u'PartitionKey': vault_name,
-            u'RowKey': eo.name,
+            u'RowKey': row_key,
+            u'Name': eo.name,
+            u'Type': eo.type,
             u'Versions': json.dumps(version_last_notified_date)
         }
 
@@ -80,12 +87,16 @@ class VaultObjectTableGateway:
     
     def update_existing_vault_object(self, vault_name, teo: TrackedExpiringObject):
 
-        for k, v in teo.versions.items():
+        row_key = LogicUtil.create_db_row_key(teo.type, teo.name)
+
+        for k in teo.versions.keys():
             teo.versions[k] = teo.versions[k].timestamp()
 
         entity = {
             u'PartitionKey': vault_name,
-            u'RowKey': teo.name,
+            u'RowKey': row_key,
+            u'Name': teo.name,
+            u'Type': teo.type,
             u'Versions': json.dumps(teo.versions)
         }
 

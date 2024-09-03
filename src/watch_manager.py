@@ -35,11 +35,12 @@ class WatchManager:
 
         notify, sc = self.obj_notification_filterer.determine_objects_to_renotify(sc)
 
-        pass
+        if notify:
+            html = self.tpl_renderer.render_html(sc.__dict__)
+            self.smtp_sender.send(html)
+            
+
         
-        # html = self.tpl_renderer.render_html(sc.__dict__)
-        # with open('C:\\Users\\weixzha\\Desktop\\a.html', 'w') as f:
-        #     f.write(html)
-        # return sc
+        
 
                 

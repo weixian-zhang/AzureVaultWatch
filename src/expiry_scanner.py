@@ -17,29 +17,53 @@ class ExpiryScanner:
     def scan(self) -> ScanContext:
 
         scan_context = ScanContext(self.appconfig.num_of_days_notify_before_expiry)
-        sub_ids = self.list_subscription_ids()
-        vaults = self.list_vaults(sub_ids)
+        #sub_ids = self.list_subscription_ids()
+        vaults = self.list_vaults()
 
         for vault in vaults:
             vm = VaultManager(vault.url, self.appconfig)
             vault.expiring_certs = vm.list_expiring_certs()
 
             # pass in cert names to ignore keys created by certificates
-            #vault.expiring_keys = vm.list_expiring_keys({c.name for c in vault.expiring_certs})
-            #vault.expiring_secrets = vm.list_expiring_secrets()
+            vault.expiring_keys = vm.list_expiring_keys({c.name for c in vault.expiring_certs})
+
+            vault.expiring_secrets = vm.list_expiring_secrets()
 
             if vault.expiring_certs or vault.expiring_keys or vault.expiring_secrets:
                 scan_context.vaults.append(vault)
+
+        # testing only
+        # import os, json, datetime
+        # with open('C:\\Users\\weixzha\\Desktop\\sc.json', 'w') as f:
+        #     scan_context.scan_date = scan_context.scan_date.strftime("%Y-%m-%d %H:%M:%S") 
+        #     for vault in scan_context.vaults:
+        #         for x in vault.expiring_certs:
+        #             for version in x.versions:
+        #                 version.created_on = version.created_on.strftime("%Y-%m-%d %H:%M:%S") 
+        #                 version.expires_on = version.expires_on.strftime("%Y-%m-%d %H:%M:%S")
+        #         for x in vault.expiring_keys:
+        #             for version in x.versions:
+        #                 version.created_on = version.created_on.strftime("%Y-%m-%d %H:%M:%S") 
+        #                 version.expires_on = version.expires_on.strftime("%Y-%m-%d %H:%M:%S")
+        #         for x in vault.expiring_secrets:
+        #             for version in x.versions:
+        #                 version.created_on = version.created_on.strftime("%Y-%m-%d %H:%M:%S") 
+        #                 version.expires_on = version.expires_on.strftime("%Y-%m-%d %H:%M:%S") 
+        #     sc_json = json.dumps(scan_context.__dict__) 
+        #     f.write(sc_json)
+
 
         return scan_context
 
         
 
-    def list_vaults(self, subscription_ids: list[KeyVault]):
+    def list_vaults(self):
 
         vaults = []
 
-        for subid in subscription_ids:
+        for s in self.sub_client.subscriptions.list():
+
+            subid = s.subscription_id
             akvc = KeyVaultManagementClient(self.dcred, subid)
 
             for v in akvc.vaults.list_by_subscription():
@@ -56,12 +80,12 @@ class ExpiryScanner:
 
         return vaults
     
-    def list_subscription_ids(self):
-        subids = []
-        for s in self.sub_client.subscriptions.list():
-            subids.append(s.subscription_id)
+    # def list_subscription_ids(self):
+    #     subids = []
+    #     for s in self.sub_client.subscriptions.list():
+    #         subids.append(s.subscription_id)
         
-        return subids
+    #     return subids
 
 
 
