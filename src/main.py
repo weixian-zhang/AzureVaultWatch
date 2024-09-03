@@ -15,11 +15,11 @@ def background_scan_and_notify():
     sc = wm.scan_expiring_items_and_notify()
     return sc
 
-@app.get("/api/ready", status_code=200)
+@app.get("/api/ready/v1", status_code=200)
 async def is_ready():
     return 'ready'
 
-@app.get("/api/objects/expire", status_code=200)
+@app.get("/api/objects/expire/v1", status_code=200)
 async def get_expired_items():
     sc = wm.scan_expiring_items()
     return sc
