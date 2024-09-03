@@ -27,23 +27,24 @@ class ObjectNotificationFilterer:
         return renotify, sc
 
 
-    # scenarios to filter objects from sending notification until configured days are met
+    # scenarios to filter objects from re-sending email notification until configured re-notify date is met
     # 1. object not tracked, begin tracking object
-    # 2. object is tracked
-        # but a new version is created and this new version was not previously tracked.
-        # Begin tracking new version
-    # 3. both object and version are tracked
-        # last_notified_date does not meet configured re-noitfy-date
+    # 2. objects are tracked - no new versions are created
+    # 3. objects are tracked - # but a new version is created and this new version was not previously tracked.
+
+    # *re-notify date = last notify date + NUM_OF_DAYS_TO_RENOTIFY_EXPIRING_ITEMS
     # 4. both object and version are tracked
-        # last_notified_date meet configured re-noitfy-date
+        # last_notified_date does not meet re-notify date
+    # 5. both object and version are tracked
+        # last_notified_date meet re-noitfy-date
     def filter_objects(self, vault_name: str, expiring_objects: list[ExpiringObject]):
 
         for expiring_obj in expiring_objects:
 
-            exists, tracked_obj = self.obj_db.is_object_exists(vault_name, expiring_obj.name)
+            exists, tracked_obj = self.obj_db.is_object_exists(vault_name, expiring_obj.type, expiring_obj.name)
 
             if not exists:
-                self.obj_db.insert_new_vault_object(vault_name, expiring_obj, tracked_obj)
+                self.obj_db.insert_new_vault_object(vault_name, expiring_obj)
                 continue
 
             self.filter_versions_in_expiring_object(vault_name, expiring_obj, tracked_obj)

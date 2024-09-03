@@ -8,11 +8,10 @@ from watch_manager import WatchManager
 app = FastAPI()
 scheduler = BackgroundScheduler()
 appconfig = AppConfig()
-
+wm = WatchManager(appconfig)
 
 #@scheduler.scheduled_job('interval', seconds=900)
 def background_scan_and_notify():
-    wm = WatchManager(appconfig)
     sc = wm.scan_expiring_items_and_notify()
     return sc
 
@@ -22,7 +21,6 @@ async def is_ready():
 
 @app.get("/api/objects/expire", status_code=200)
 async def get_expired_items():
-    wm = WatchManager(appconfig)
     sc = wm.scan_expiring_items()
     return sc
 

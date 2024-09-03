@@ -29,6 +29,10 @@ class LogicUtil:
         
         return False
     
+    @staticmethod
+    def create_db_row_key(type: str, name: str) -> bool:
+        return f'{type}_{name}'
+    
 
 class DateUtil:
 
