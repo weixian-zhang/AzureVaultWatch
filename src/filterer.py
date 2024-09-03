@@ -73,7 +73,7 @@ class ObjectNotificationFilterer:
                 tracked_version_last_notify_date = tracked_obj.versions[v.version]
                 
                 # version exist in db and last_notify_date has past configured num of days to re-notify
-                if LogicUtil.version_last_notify_date_over_config_num_of_days(
+                if LogicUtil.should_notify_again(
                     tracked_version_last_notify_date,
                     self.appconfig.num_of_days_to_renotify_expiring_objects
                     ):
