@@ -4,38 +4,45 @@ from email.mime.text import MIMEText
 from email.generator import Generator
 from io import StringIO
 from config import AppConfig
+from opentelemetry.trace import Tracer
 
 class SMTPSender:
 
-    def __init__(self, appconfig: AppConfig) -> None:
+    def __init__(self, appconfig: AppConfig, otel_tracer: Tracer) -> None:
         self.appconfig = appconfig
+        self.otel_tracer = otel_tracer
 
     def send(self, content: str):
-        # Create an SMTP object and establish a connection to the SMTP server
-        smtpObj = smtplib.SMTP(self.appconfig.smtp_config.host, self.appconfig.smtp_config.port)
 
-        # Identify yourself to an ESMTP server using EHLO
-        smtpObj.ehlo()
+        with self.otel_tracer.start_as_current_span('SMTPSender.send') as cs:
 
-        # Secure the SMTP connection
-        smtpObj.starttls()
+            # Create an SMTP object and establish a connection to the SMTP server
+            smtpObj = smtplib.SMTP(self.appconfig.smtp_config.host, self.appconfig.smtp_config.port)
 
-        smtpObj.login(self.appconfig.smtp_config.username, self.appconfig.smtp_config.password)
+            # Identify yourself to an ESMTP server using EHLO
+            smtpObj.ehlo()
 
-        html_mime = MIMEText(content, 'html', 'UTF-8')
+            # Secure the SMTP connection
+            smtpObj.starttls()
 
-        msg = MIMEMultipart('alternative') #EmailMessage()
-        msg.attach(html_mime)
-        msg['Subject'] = self.appconfig.smtp_config.subject
-        msg['From'] = self.appconfig.smtp_config.senderAddress
-        msg['To'] = ', '.join(self.appconfig.smtp_config.to)
-        msg['Cc'] = ', '.join(self.appconfig.smtp_config.cc)
+            smtpObj.login(self.appconfig.smtp_config.username, self.appconfig.smtp_config.password)
 
-        # Create a generator and flatten message object to 'file’
-        str_io = StringIO()
-        g = Generator(str_io, False)
-        g.flatten(msg)
+            html_mime = MIMEText(content, 'html', 'UTF-8')
 
-        smtpObj.sendmail( self.appconfig.smtp_config.senderAddress, self.appconfig.smtp_config.to, msg.as_string())
+            msg = MIMEMultipart('alternative') #EmailMessage()
+            msg.attach(html_mime)
+            msg['Subject'] = self.appconfig.smtp_config.subject
+            msg['From'] = self.appconfig.smtp_config.senderAddress
+            msg['To'] = ', '.join(self.appconfig.smtp_config.to)
+            msg['Cc'] = ', '.join(self.appconfig.smtp_config.cc)
 
-        smtpObj.quit()
+            # Create a generator and flatten message object to 'file’
+            str_io = StringIO()
+            g = Generator(str_io, False)
+            g.flatten(msg)
+
+            smtpObj.sendmail( self.appconfig.smtp_config.senderAddress, self.appconfig.smtp_config.to, msg.as_string())
+
+            smtpObj.quit()
+
+            cs.add_event('finish SMTPSender.send')
