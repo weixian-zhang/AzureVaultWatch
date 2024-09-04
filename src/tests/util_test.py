@@ -1,35 +1,9 @@
 from util import LogicUtil
-import pytest
 import os 
 import datetime
-from unittest.mock import patch, Mock
-from unittest import mock
 from freezegun import freeze_time
 
-cwd = os.path.dirname(os.path.realpath(__file__))
-scan_context = None
-
-# @pytest.fixture()
-# def resource():
-#     with open(os.path.join(cwd, 'scan_context.json')) as f:
-#         sc_str = f.read()
-#         sc = json.loads(sc_str)
-
-#         yield sc
-#         print("teardown")
-
 class TestLogicUtil:
- # scenarios to filter objects from re-sending email notification until configured re-notify date is met
-    # 1. object not tracked, begin tracking object
-    # 2. objects are tracked - no new versions are created
-    # 3. objects are tracked - # but a new version is created and this new version was not previously tracked.
-
-    # *re-notify date = last notify date + NUM_OF_DAYS_TO_RENOTIFY_EXPIRING_ITEMS
-    # 4. both object and version are tracked
-        # last_notified_date does not meet re-notify date
-    # 5. both object and version are tracked
-        # last_notified_date meet re-noitfy-date
-
 
     """
     freezetime is use to mock datetime.now() in LogicUtil functions
