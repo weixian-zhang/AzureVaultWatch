@@ -2,29 +2,47 @@ from config import AppConfig
 from model import ScanContext, ExpiringObject, TrackedExpiringObject
 from db import VaultObjectTableGateway
 from util import DateUtil, LogicUtil
+from opentelemetry.trace import Tracer
+
 class ObjectNotificationFilterer:
 
-    def __init__(self, appconfig: AppConfig) -> None:
+    def __init__(self, appconfig: AppConfig, otel_tracer: Tracer) -> None:
+        self.otel_tracer = otel_tracer
         self.appconfig = appconfig
         self.obj_db = VaultObjectTableGateway(appconfig)
 
 
     def determine_objects_to_renotify(self, sc: ScanContext) -> tuple[bool, ScanContext]:
 
-        renotify = False
+        with self.otel_tracer.start_as_current_span('ObjectNotificationFilterer.determine_objects_to_renotify') as cs:
+
+            cs.add_event('start ObjectNotificationFilterer.determine_objects_to_renotify')
+
+            renotify = False
+            
+            for vault in sc.vaults:
+
+                vault.expiring_certs = self.filter_objects(vault.name, vault.expiring_certs)
+
+                vault.expiring_keys = self.filter_objects(vault.name, vault.expiring_keys)
+
+                vault.expiring_secrets = self.filter_objects(vault.name, vault.expiring_secrets)
+
+                if vault.expiring_certs or vault.expiring_keys or vault.expiring_secrets:
+                    renotify = True
+
+            cs.add_event(name=f'finish ObjectNotificationFilterer.determine_objects_to_renotify',
+                         attributes= {
+                              'renotify': renotify,
+                              'expiring_certs_to_renotify': ', '.join([x.name for x in vault.expiring_certs]),
+                              'expiring_keys_to_renotify': ', '.join([x.name for x in vault.expiring_keys]),
+                              'expiring_secrets_to_renotify': ', '.join([x.name for x in vault.expiring_secrets]),
+                         })
+
+            return renotify, sc
         
-        for vault in sc.vaults:
 
-            vault.expiring_certs = self.filter_objects(vault.name, vault.expiring_certs)
-
-            vault.expiring_keys = self.filter_objects(vault.name, vault.expiring_keys)
-
-            vault.expiring_secrets = self.filter_objects(vault.name, vault.expiring_secrets)
-
-            if vault.expiring_certs or vault.expiring_keys or vault.expiring_secrets:
-                renotify = True
-
-        return renotify, sc
+            
 
 
     # scenarios to filter objects from re-sending email notification until configured re-notify date is met

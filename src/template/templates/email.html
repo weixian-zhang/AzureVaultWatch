@@ -156,6 +156,8 @@
         </div>
         
         {% for vault in vaults %}
+
+        {% if vault.expiring_secrets|length > 0 or vault.expiring_certs|length > 0 or vault.expiring_keys|length > 0%}
         <div class="section-container">
 
             <div style="white-space:nowrap">
@@ -281,6 +283,7 @@
         {% endif %}
 
         </div>
+        {% endif %}
         {% endfor %}
         
     </div>
