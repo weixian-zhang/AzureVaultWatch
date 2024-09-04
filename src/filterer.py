@@ -34,9 +34,9 @@ class ObjectNotificationFilterer:
             cs.add_event(name=f'finish ObjectNotificationFilterer.determine_objects_to_renotify',
                          attributes= {
                               'renotify': renotify,
-                              'expiring_certs_to_renotify': ', '.join([x.name for x in vault.expiring_certs]),
-                              'expiring_keys_to_renotify': ', '.join([x.name for x in vault.expiring_keys]),
-                              'expiring_secrets_to_renotify': ', '.join([x.name for x in vault.expiring_secrets]),
+                              'expiring_certs_to_renotify': ', '.join([', '.join(x.expiring_certs) for x in [v for v in sc.vaults] if not x ]),
+                              'expiring_keys_to_renotify':  ', '.join([', '.join(x.expiring_keys) for x in [v for v in sc.vaults] if not x ]),
+                              'expiring_secrets_to_renotify': ', '.join([', '.join(x.expiring_secrets) for x in [v for v in sc.vaults] if not x ])
                          })
 
             return renotify, sc
