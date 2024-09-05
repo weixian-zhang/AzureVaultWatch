@@ -10,6 +10,14 @@
             "options": {
                 "cwd": "${workspaceFolder}\\src"
             }
+        },
+        {
+            "label": "podman build",
+            "type": "shell",
+            "command": "podman rmi docker.io/wxzd/azurevaultwatch:v1; podman build -t docker.io/wxzd/azurevaultwatch:v1 .",
+            "options": {
+                "cwd": "${workspaceFolder}\\src"
+            }
         }
     ]
 }

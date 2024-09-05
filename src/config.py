@@ -27,7 +27,7 @@ class AppConfig:
         self.num_of_days_notify_before_expiry = nod_before_exp
         self.num_of_days_to_renotify_expiring_objects = nod_renotify
         self.smtp_config = self.get_smtp_config()
-        self.appinsights_connection_string = os.environ.get('APP_INSIGHTS_CONN_STRIN')
+        self.appinsights_connection_string = os.environ.get('APP_INSIGHTS_CONN_STRING')
         
 
     def get_smtp_config(self):

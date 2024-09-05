@@ -1,0 +1,50 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: azvaultwatch-internal-gateway
+spec:
+  selector:
+    istio: aks-istio-ingressgateway-internal
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "azvaultwatch.aks-apps.local"
+
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: azvaultwatch-virtual-service
+spec:
+  hosts:
+  - "azvaultwatch.aks-apps.local"
+  gateways:
+  - azvaultwatch-internal-gateway
+  http:
+  - name: "ready"
+    match:
+    - uri:
+        exact: /api/ready/v1
+    - uri:
+        prefix: /api/ready/v1
+    route:
+    - destination:
+        host: azvaultwatch-service.web-dev.svc.cluster.local
+        port:
+          number: 80
+
+  - name: "objects-expire"
+    match:
+    - uri:
+        exact: /api/objects/expire/v1
+    - uri:
+        prefix: /api/objects/expire/v1
+    route:
+    - destination:
+        host: azvaultwatch-service.web-dev.svc.cluster.local
+        port:
+          number: 80
+  
