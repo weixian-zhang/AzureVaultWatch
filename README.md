@@ -32,6 +32,5 @@ Upon detection, VaultWatch also supports sending an email containing HTML-format
     "subject": "Azure Key Vault Expiring Artifacts",
     "senderAddress": "DoNotReply@674edb48-246c-4119-ac71-7eabf6c96aa5.azurecomm.net",
     "to": ["weixzha@microsoft.com"],
-    "cc": []
-  </code>  
+    "cc": []</code>  
   APP_INSIGHTS_CONN_STRING='app insights connection string'
