@@ -30,7 +30,7 @@ tracer = trace.get_tracer(__name__)
 wm = WatchManager(appconfig, tracer)
 
 
-@scheduler.scheduled_job('interval', seconds=10)#seconds=900)
+@scheduler.scheduled_job('interval', seconds=900)
 def background_scan_and_notify():
     with tracer.start_as_current_span('background_scan_and_notify') as cs:
         cs.add_event('start main.background_scan_and_notify')
