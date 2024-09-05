@@ -3,13 +3,15 @@
 Azure Vault Watch supports detecting expiring Certificates, Keys and Secrets from multiple Key Vaults across subscriptions within a single tenant.  
 Upon detection, VaultWatch also supports sending an email containing HTML-formated report on expiring objects.  
 
+
 ### Features 
 * Detect expiring Key Vault Keys, Secrets and Certs objects from multiple Key Vaults across subscriptions within a single tenant. 
 * Send once only - When an object is detected to be expiring, app sends the email report once only.
 * Supports HTTP endpoint to retrieve expiring objects as Json data to support monitoring clients e.g: Grafana
 * Supports container deployment
 
-### Deploy AzureVaultWatch  
+
+### How to Deploy
 
 * Supports container deployment from [Docker Hub](https://hub.docker.com/r/wxzd/azurevaultwatch)
 * For Kubernetes deployment, see [here](https://github.com/weixian-zhang/AzureVaultWatch/tree/main/infra-as-code/kubernetes)
