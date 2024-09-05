@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: azvaultwatch
+  namespace: web-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: azvaultwatch
+  template:
+    metadata:
+      labels:
+        app: azvaultwatch
+        azure.workload.identity/use: "true" # workload identity
+    spec:
+      serviceAccountName: "sa-az-workload-identity" # workload identity
+      containers:
+        - name: my-container
+          image: wxzd/azurevaultwatch:v1 # Replace with your app image
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          env:
+            - name: NUM_OF_DAYS_NOTIFY_BEFORE_EXPIRY
+              value: "90"
+            - name: NUM_OF_DAYS_TO_RENOTIFY_EXPIRING_ITEMS
+              value: "5"
+            - name: STORAGE_ACCOUNT_NAME
+              value: "strgvaultwatch"
+            - name: STORAGE_TABLE_NAME
+              value: "NotifiedExpiringVersions"
+            - name: SMTP_CONFIG
+              valueFrom:
+                secretKeyRef:
+                  name: azvaultwatch
+                  key: SMTP_CONFIG
+            - name: APP_INSIGHTS_CONN_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: azvaultwatch
+                  key: APP_INSIGHTS_CONN_STRING
+
+                  
+
+            # - name: APP_INSIGHTS_CONN_STRING
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: azure-secrets-store # Refers to the secret from Key Vault
+            #       key: your-secret-name # Key in the secret
+          # volumeMounts:
+          #   - name: secrets-store
+          #     mountPath: "/mnt/secrets-store"
+          #     readOnly: true
+      # volumes:
+      #   - name: secrets-store
+      #     csi:
+      #       driver: secrets-store.csi.k8s.io
+      #       readOnly: true
+      #       volumeAttributes:
+      #         secretProviderClass: "azure-keyvault-secret-provider" # Refers to the SecretProviderClass created above
+
