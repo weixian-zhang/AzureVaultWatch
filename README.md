@@ -1,5 +1,7 @@
 # Azure VaultWatch  
+<span style="font-size:0.4em;color:blue">*Inspired and donated by Project Beacon*</span>
 
+<br >
 Azure Vault Watch supports detecting expiring Certificates, Keys and Secrets from multiple Key Vaults across subscriptions within a single tenant.  
 Upon detection, VaultWatch also supports sending an email containing HTML-formated report on expiring objects.  
 
