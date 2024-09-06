@@ -9,7 +9,7 @@ Upon detection, VaultWatch also supports sending an email containing HTML-format
 * Send once only - When an object is detected to be expiring, app sends the email report once only.
 * Supports HTTP endpoint to retrieve expiring objects as Json data to support monitoring clients e.g: Grafana
 * Supports container deployment
-* customizable Jinja2 rendered HTML report in email
+* customizable Jinja2 template used to render HTML report in email
   ![image](https://github.com/user-attachments/assets/7263183c-8079-40b1-98ad-b2eee7d2fd05)
  
 
