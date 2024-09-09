@@ -22,7 +22,8 @@ Upon detection, VaultWatch also supports sending an email containing HTML-format
 <br >
 
 ## Architecture Design  
-![image](https://github.com/user-attachments/assets/2a395b81-f5e4-44bb-9154-5bd2c99270d1)
+![image](https://github.com/user-attachments/assets/271da0bb-76fa-4500-b89e-159774f8d42a)
+
 
 
 
