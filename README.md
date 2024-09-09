@@ -11,7 +11,7 @@ Upon detection, VaultWatch also supports sending an email containing HTML-format
 * The duration of expiration detetction can be configured with environment variable NUM_OF_DAYS_NOTIFY_BEFORE_EXPIRY
 * Notify once - When one or more expiring objects are detected an email notification will be sent. To prevent spam-send, user can configure environment variable NUM_OF_DAYS_TO_RENOTIFY_EXPIRING_ITEMS with a large number of days. Conversely, if user wants to receive email notification frequently e.g every 3 days, user can set  NUM_OF_DAYS_TO_RENOTIFY_EXPIRING_ITEMS=3.
 * Provides a HTTP endpoint */api/objects/expire/v1* for monitoring clients like Grafana, to retrieve expiring objects as Json data
-* Supports container deployment
+* Supports [container](https://hub.docker.com/r/wxzd/azurevaultwatch) deployment, <code>docker pull wxzd/azurevaultwatch</code>
 * Supports sending email to any SMTP server by configuring environment variable SMTP_CONFIG in [How to Deploy](#how-to-deploy).  
   * able to send to multiple email addresses  
   (Example below using [Azure Communication Service SMTP Support](https://learn.microsoft.com/en-us/azure/communication-services/concepts/email/email-smtp-overview))
