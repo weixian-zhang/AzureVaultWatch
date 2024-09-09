@@ -2,17 +2,19 @@
 <span style="font-size:0.4em;color:blue">*Inspired and donated by Project Beacon*</span>
 
 <br >
-Azure Vault Watch supports detecting expiring Certificates, Keys and Secrets from multiple Key Vaults across subscriptions within a single tenant.  
+Azure Vault Watch detects expiring Certificates, Keys and Secrets from multiple Key Vaults across subscriptions within a single tenant.  
 Upon detection, VaultWatch also supports sending an email containing HTML-formated report on expiring objects.  
 
 
 ### Features 
-* Detect expiring Key Vault Keys, Secrets and Certs objects from multiple Key Vaults across subscriptions within a single tenant. 
-* Send once only - When an object is detected to be expiring, app sends the email report once only.
+* Detects expiring Key Vault Keys, Secrets and Certs objects from multiple Key Vaults across subscriptions within a single tenant.
+* The duration of expiration detetction can be configured with environment variable NUM_OF_DAYS_NOTIFY_BEFORE_EXPIRY
+* Notify once - When one or more expiring objects are detected an email notification will be sent. To prevent spam-send, user can configure environment variable NUM_OF_DAYS_TO_RENOTIFY_EXPIRING_ITEMS with a large number of days. Conversely, if user wants to receive email notification frequently e.g every 3 days, user can set  NUM_OF_DAYS_TO_RENOTIFY_EXPIRING_ITEMS=3.
 * Supports HTTP endpoint to retrieve expiring objects as Json data to support monitoring clients e.g: Grafana
 * Supports container deployment
 * customizable Jinja2 template used to render HTML report in email
   ![image](https://github.com/user-attachments/assets/7263183c-8079-40b1-98ad-b2eee7d2fd05)
+* App uses OpenTelemetry Trace to trace Azure API calls and exports to Application Insights, for performance monitoring and ease of troubleshooting
  
 
 
