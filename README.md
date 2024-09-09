@@ -12,10 +12,13 @@ Upon detection, VaultWatch also supports sending an email containing HTML-format
 * Notify once - When one or more expiring objects are detected an email notification will be sent. To prevent spam-send, user can configure environment variable NUM_OF_DAYS_TO_RENOTIFY_EXPIRING_ITEMS with a large number of days. Conversely, if user wants to receive email notification frequently e.g every 3 days, user can set  NUM_OF_DAYS_TO_RENOTIFY_EXPIRING_ITEMS=3.
 * Provides a HTTP endpoint */api/objects/expire/v1* for monitoring clients like Grafana, to retrieve expiring objects as Json data
 * Supports container deployment
+* Supports sending email to any SMTP server by configuring environment variable SMTP_CONFIG in [How to Deploy](#how-to-deploy).  
+  Example below using [Azure Communication Service SMTP Support](https://learn.microsoft.com/en-us/azure/communication-services/concepts/email/email-smtp-overview)
 * customizable Jinja2 template used to render HTML report in email
   ![image](https://github.com/user-attachments/assets/7263183c-8079-40b1-98ad-b2eee7d2fd05)
 * App uses OpenTelemetry Trace to trace Azure API calls and exports to Application Insights, for performance monitoring and ease of troubleshooting
- 
+
+### Architecture Design
 
 
 ### How to Deploy
