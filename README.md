@@ -13,7 +13,8 @@ Upon detection, VaultWatch also supports sending an email containing HTML-format
 * Provides a HTTP endpoint */api/objects/expire/v1* for monitoring clients like Grafana, to retrieve expiring objects as Json data
 * Supports container deployment
 * Supports sending email to any SMTP server by configuring environment variable SMTP_CONFIG in [How to Deploy](#how-to-deploy).  
-  Example below using [Azure Communication Service SMTP Support](https://learn.microsoft.com/en-us/azure/communication-services/concepts/email/email-smtp-overview)
+  * able to send to multiple email addresses  
+  (Example below using [Azure Communication Service SMTP Support](https://learn.microsoft.com/en-us/azure/communication-services/concepts/email/email-smtp-overview))
 * customizable Jinja2 template used to render HTML report in email
   ![image](https://github.com/user-attachments/assets/7263183c-8079-40b1-98ad-b2eee7d2fd05)
 * App uses OpenTelemetry Trace to trace Azure API calls and exports to Application Insights, for performance monitoring and ease of troubleshooting
